@@ -7,12 +7,13 @@ function AccountOperations() {
 	const [loanAmount, setLoanAmount] = useState("");
 	const [loanPurpose, setLoanPurpose] = useState("");
 	const [currency, setCurrency] = useState("USD");
-	const loan = useSelector((sotre) => sotre.account.loan);
+	const { loan, isLoading } = useSelector((sotre) => sotre.account);
 	const dispatch = useDispatch();
 	function handleDeposit() {
 		if (!depositAmount) return;
-		dispatch(deposit(depositAmount));
+		dispatch(deposit(depositAmount, currency));
 		setDepositAmount("");
+		setCurrency("");
 	}
 
 	function handleWithdrawal() {
@@ -52,7 +53,9 @@ function AccountOperations() {
 						<option value="GBP">British Pound</option>
 					</select>
 
-					<button onClick={handleDeposit}>Deposit {depositAmount}</button>
+					<button onClick={handleDeposit} disabled={isLoading}>
+						{isLoading ? "Converting" : `Deposit ${depositAmount}`}
+					</button>
 				</div>
 
 				<div>
